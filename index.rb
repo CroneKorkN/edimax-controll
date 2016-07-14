@@ -5,9 +5,6 @@ cgi = CGI.new
 puts cgi.header
 ip = File.read("/var/www/ddns/ip.txt")
 
-#p ip
-#p "curl -d @status.xml http://admin:1234@#{ip}:10000/smartplug.cgi"
-
 status = `curl -d @status.xml http://admin:1234@#{ip}:10000/smartplug.cgi`.scan(/<Device.System.Power.State>(.*)<\/Device.System.Power.State>/)[0][0] == "ON" ? true : false
 usage = `curl -d @usage.xml http://admin:1234@#{ip}:10000/smartplug.cgi`.scan(/<Device.System.Power.NowPower>(.*)<\/Device.System.Power.NowPower>/)[0][0].to_f
 

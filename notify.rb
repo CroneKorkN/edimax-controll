@@ -5,9 +5,11 @@ require "mysql2"
 
 db = Mysql2::Client.new(:host => "localhost", :username => "edimax-controll", password: "", database: "edimax-controll")
 result = db.query "SELECT SUM(WATTS) AS sum, count(*) AS count FROM wattages WHERE datetime > '#{DateTime.now - (24/24.0)}'"
-watts = 0.0
+kwh = 0.0
+cost = 0.0
 result.each do |row|
-  watts = row["sum"].to_f / row["count"].to_i
+  kwh = row["sum"].to_f / row["count"].to_i * 24 / 1000
+  cost = kwh * 0.23
 end
 
 Mail.defaults do
@@ -18,7 +20,7 @@ end
   Mail.deliver do
     from    'edimax-controll@sublimity.de'
     to      address
-    subject "#{watts} watts"
-    body    "#{watts} watts averagely in the last 24 hours"
+    subject "#{cost.round(2)} € yesterday"
+    body    "#{kwh.round(2)} KWh (#{cost.round(2)} €) in the last 24 hours"
   end
 end

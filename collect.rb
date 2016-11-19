@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 require "mysql2"
-ip = File.read("/var/www/ddns/ip.txt")
+ip = "10.0.0.127" #File.read("/var/www/ddns/ip.txt")
 
 db = Mysql2::Client.new(:host => "localhost", :username => "edimax-controll", password: "tPY6rfRbJcULLrQJ", database: "edimax-controll")
 
